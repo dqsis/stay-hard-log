@@ -24,16 +24,11 @@ export function useWorkouts() {
 
   // Finds today's workout if one already exists, otherwise creates it with the
   // most recently used location pre-filled so the user rarely has to type it.
+  // Uses upsert + ignoreDuplicates against the (user_id, workout_date) unique
+  // constraint so two concurrent calls (e.g. React StrictMode's double-effect
+  // in dev, or two tabs) converge on one row instead of racing to insert two.
   const getOrCreateTodayWorkout = useCallback(async (): Promise<Workout> => {
     const today = new Date().toISOString().slice(0, 10)
-    const { data: existing, error: findError } = await supabase
-      .from('workouts')
-      .select('*')
-      .eq('workout_date', today)
-      .maybeSingle()
-    if (findError) throw findError
-    if (existing) return existing
-
     const { data: userData } = await supabase.auth.getUser()
     const userId = userData.user?.id
     if (!userId) throw new Error('Not signed in')
@@ -46,19 +41,25 @@ export function useWorkouts() {
       .maybeSingle()
 
     const nowTime = new Date().toTimeString().slice(0, 8)
-    const { data: created, error: createError } = await supabase
-      .from('workouts')
-      .insert({
+    const { error: upsertError } = await supabase.from('workouts').upsert(
+      {
         user_id: userId,
         workout_date: today,
         start_time: nowTime,
         location: mostRecent?.location ?? null,
-      })
-      .select()
+      },
+      { onConflict: 'user_id,workout_date', ignoreDuplicates: true },
+    )
+    if (upsertError) throw upsertError
+
+    const { data: current, error: selectError } = await supabase
+      .from('workouts')
+      .select('*')
+      .eq('workout_date', today)
       .single()
-    if (createError) throw createError
+    if (selectError) throw selectError
     await refresh()
-    return created
+    return current
   }, [refresh])
 
   const updateWorkout = useCallback(
