@@ -52,16 +52,18 @@ export function SetEntryForm({
 }: {
   defaultReps: number
   defaultWeightKg: number
-  onAdd: (reps: number, weightKg: number) => Promise<void>
+  onAdd: (reps: number, weightKg: number, setsCount: number) => Promise<void>
 }) {
   const [reps, setReps] = useState(defaultReps)
   const [weightKg, setWeightKg] = useState(defaultWeightKg)
+  const [setsCount, setSetsCount] = useState(1)
   const [saving, setSaving] = useState(false)
 
   async function handleAdd() {
     setSaving(true)
     try {
-      await onAdd(reps, weightKg)
+      await onAdd(reps, weightKg, setsCount)
+      setSetsCount(1)
     } finally {
       setSaving(false)
     }
@@ -69,6 +71,7 @@ export function SetEntryForm({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-border bg-panel p-3">
+      <Stepper value={setsCount} step={1} min={1} suffix="sets" onChange={setSetsCount} />
       <Stepper value={reps} step={1} min={0} suffix="reps" onChange={setReps} />
       <Stepper value={weightKg} step={2.5} min={0} suffix="kg" onChange={setWeightKg} />
       <button
@@ -77,7 +80,7 @@ export function SetEntryForm({
         disabled={saving}
         className="rounded bg-ink px-4 py-2 font-semibold text-white disabled:opacity-50"
       >
-        Add Set
+        {setsCount > 1 ? `Add ${setsCount} Sets` : 'Add Set'}
       </button>
     </div>
   )

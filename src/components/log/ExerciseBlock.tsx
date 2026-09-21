@@ -14,7 +14,7 @@ export function ExerciseBlock({
   onDeleteSet,
 }: {
   group: ExerciseGroup
-  onAddSet: (reps: number, weightKg: number) => Promise<void>
+  onAddSet: (reps: number, weightKg: number, setsCount: number) => Promise<void>
   onUpdateSet: (id: string, patch: { reps: number; weight_kg: number }) => Promise<void>
   onDeleteSet: (id: string) => Promise<void>
 }) {

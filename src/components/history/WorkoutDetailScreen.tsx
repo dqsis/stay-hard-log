@@ -21,7 +21,7 @@ export function WorkoutDetailScreen() {
     if (id) fetchWorkoutById(id).then(setWorkout)
   }, [id])
 
-  const { groups, addSet, updateSet, deleteSet } = useWorkoutSets(workout?.id ?? null)
+  const { groups, addSets, updateSet, deleteSet } = useWorkoutSets(workout?.id ?? null)
 
   if (!workout) {
     return (
@@ -47,7 +47,7 @@ export function WorkoutDetailScreen() {
         <ExerciseBlock
           key={group.exerciseId}
           group={group}
-          onAddSet={(reps, weightKg) => addSet(group.exerciseId, reps, weightKg)}
+          onAddSet={(reps, weightKg, setsCount) => addSets(group.exerciseId, reps, weightKg, setsCount)}
           onUpdateSet={updateSet}
           onDeleteSet={deleteSet}
         />
@@ -78,7 +78,7 @@ export function WorkoutDetailScreen() {
           onCreateNew={(name) => findOrCreateExercise(name)}
           onSelect={async (exercise) => {
             setPickerOpen(false)
-            await addSet(exercise.id, 8, 20)
+            await addSets(exercise.id, 8, 20, 1)
           }}
         />
       )}

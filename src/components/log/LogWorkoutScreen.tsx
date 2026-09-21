@@ -24,7 +24,7 @@ export function LogWorkoutScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const { groups, addSet, updateSet, deleteSet } = useWorkoutSets(workout?.id ?? null)
+  const { groups, addSets, updateSet, deleteSet } = useWorkoutSets(workout?.id ?? null)
 
   if (!workout) {
     return (
@@ -55,7 +55,7 @@ export function LogWorkoutScreen() {
         <ExerciseBlock
           key={group.exerciseId}
           group={group}
-          onAddSet={(reps, weightKg) => addSet(group.exerciseId, reps, weightKg)}
+          onAddSet={(reps, weightKg, setsCount) => addSets(group.exerciseId, reps, weightKg, setsCount)}
           onUpdateSet={updateSet}
           onDeleteSet={deleteSet}
         />

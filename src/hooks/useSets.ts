@@ -54,22 +54,25 @@ export function useWorkoutSets(workoutId: string | null) {
     refresh()
   }, [refresh])
 
-  const addSet = useCallback(
-    async (exerciseId: string, reps: number, weightKg: number) => {
+  // count > 1 logs several identical sets at once (e.g. "4x5" in one tap)
+  // instead of requiring one round trip per set.
+  const addSets = useCallback(
+    async (exerciseId: string, reps: number, weightKg: number, count: number) => {
       if (!workoutId) throw new Error('No active workout')
       const { data: userData } = await supabase.auth.getUser()
       const userId = userData.user?.id
       if (!userId) throw new Error('Not signed in')
 
-      const setNumber = sets.filter((s) => s.exercise_id === exerciseId).length + 1
-      const { error } = await supabase.from('sets').insert({
+      const startingSetNumber = sets.filter((s) => s.exercise_id === exerciseId).length + 1
+      const rows = Array.from({ length: count }, (_, i) => ({
         user_id: userId,
         workout_id: workoutId,
         exercise_id: exerciseId,
-        set_number: setNumber,
+        set_number: startingSetNumber + i,
         reps,
         weight_kg: weightKg,
-      })
+      }))
+      const { error } = await supabase.from('sets').insert(rows)
       if (error) throw error
       await refresh()
     },
@@ -94,7 +97,7 @@ export function useWorkoutSets(workoutId: string | null) {
     [refresh],
   )
 
-  return { sets, groups: groupByExercise(sets), loading, addSet, updateSet, deleteSet, refresh }
+  return { sets, groups: groupByExercise(sets), loading, addSets, updateSet, deleteSet, refresh }
 }
 
 // Looks up the most recently logged set for an exercise (any workout), used to
