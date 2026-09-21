@@ -12,8 +12,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'Gym Log',
-        short_name: 'Gym Log',
+        name: 'Stay Hard Log',
+        short_name: 'Stay Hard',
         description: 'Personal gym workout logger',
         theme_color: '#faf8f3',
         background_color: '#faf8f3',

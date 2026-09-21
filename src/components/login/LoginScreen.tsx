@@ -19,7 +19,7 @@ export function LoginScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg px-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="font-bold text-2xl text-ink">Gym Log</h1>
+        <h1 className="font-bold text-2xl text-ink">Stay Hard Log</h1>
         <input
           type="email"
           autoComplete="username"

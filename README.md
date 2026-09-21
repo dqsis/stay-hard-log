@@ -1,4 +1,4 @@
-# Gym Log
+# Stay Hard Log
 
 Personal gym workout logger — log sets on your phone at the gym, view/edit history from any device. React + Vite PWA, Supabase (Postgres + Auth), deployed on Vercel.
 
