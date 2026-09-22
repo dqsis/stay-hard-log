@@ -10,17 +10,18 @@ import { ExercisePicker } from './ExercisePicker'
 import { WorkoutMetaBar } from './WorkoutMetaBar'
 
 export function LogWorkoutScreen() {
-  const { getOrCreateTodayWorkout, updateWorkout } = useWorkouts()
+  const { getOrCreateActiveWorkout, finishWorkout, updateWorkout } = useWorkouts()
   const { exercises, findOrCreateExercise } = useExercises()
   const [workout, setWorkout] = useState<Workout | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [finishing, setFinishing] = useState(false)
   // Exercises added to this session that don't have a logged set yet — kept
   // client-side only until "Add Set" actually writes the first one.
   const [pendingExercises, setPendingExercises] = useState<Exercise[]>([])
 
   useEffect(() => {
-    getOrCreateTodayWorkout().then(setWorkout)
-    // Only run once on mount — this screen always targets "today."
+    getOrCreateActiveWorkout().then(setWorkout)
+    // Only run once on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -32,6 +33,19 @@ export function LogWorkoutScreen() {
         <p className="text-mid">Loading…</p>
       </AppShell>
     )
+  }
+
+  async function handleDone() {
+    if (!workout) return
+    setFinishing(true)
+    try {
+      await finishWorkout(workout.id)
+      setPendingExercises([])
+      setWorkout(null)
+      setWorkout(await getOrCreateActiveWorkout())
+    } finally {
+      setFinishing(false)
+    }
   }
 
   const activeExerciseIds = new Set(groups.map((g) => g.exerciseId))
@@ -66,6 +80,14 @@ export function LogWorkoutScreen() {
         className="w-full rounded border border-dashed border-border py-3 font-semibold text-terracotta"
       >
         + Add Exercise
+      </button>
+
+      <button
+        onClick={handleDone}
+        disabled={finishing}
+        className="mt-3 w-full rounded bg-ink px-4 py-3 font-semibold text-white disabled:opacity-50"
+      >
+        {finishing ? 'Finishing…' : 'Done — Start New Workout'}
       </button>
 
       {pickerOpen && (

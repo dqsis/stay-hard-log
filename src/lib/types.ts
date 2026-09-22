@@ -10,6 +10,7 @@ export interface Workout {
   user_id: string
   workout_date: string // yyyy-mm-dd
   start_time: string | null // HH:mm:ss
+  ended_at: string | null // timestamptz, set when the workout is marked done
   location: string | null
   notes: string | null
   created_at: string

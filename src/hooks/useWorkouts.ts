@@ -22,13 +22,21 @@ export function useWorkouts() {
     refresh()
   }, [refresh])
 
-  // Finds today's workout if one already exists, otherwise creates it with the
-  // most recently used location pre-filled so the user rarely has to type it.
-  // Uses upsert + ignoreDuplicates against the (user_id, workout_date) unique
-  // constraint so two concurrent calls (e.g. React StrictMode's double-effect
-  // in dev, or two tabs) converge on one row instead of racing to insert two.
-  const getOrCreateTodayWorkout = useCallback(async (): Promise<Workout> => {
-    const today = new Date().toISOString().slice(0, 10)
+  // Finds the current open (unfinished) workout if one exists, otherwise
+  // creates one with the most recently used location pre-filled. "Open" means
+  // ended_at is null -- there's a partial unique index enforcing at most one
+  // per user, so if two calls race to create one (e.g. React StrictMode's
+  // double-effect in dev), the loser's insert fails with a unique violation
+  // and falls back to selecting the row the winner just created.
+  const getOrCreateActiveWorkout = useCallback(async (): Promise<Workout> => {
+    const { data: existing, error: findError } = await supabase
+      .from('workouts')
+      .select('*')
+      .is('ended_at', null)
+      .maybeSingle()
+    if (findError) throw findError
+    if (existing) return existing
+
     const { data: userData } = await supabase.auth.getUser()
     const userId = userData.user?.id
     if (!userId) throw new Error('Not signed in')
@@ -40,27 +48,45 @@ export function useWorkouts() {
       .limit(1)
       .maybeSingle()
 
+    const today = new Date().toISOString().slice(0, 10)
     const nowTime = new Date().toTimeString().slice(0, 8)
-    const { error: upsertError } = await supabase.from('workouts').upsert(
-      {
+    const { data: created, error: insertError } = await supabase
+      .from('workouts')
+      .insert({
         user_id: userId,
         workout_date: today,
         start_time: nowTime,
         location: mostRecent?.location ?? null,
-      },
-      { onConflict: 'user_id,workout_date', ignoreDuplicates: true },
-    )
-    if (upsertError) throw upsertError
-
-    const { data: current, error: selectError } = await supabase
-      .from('workouts')
-      .select('*')
-      .eq('workout_date', today)
+      })
+      .select()
       .single()
-    if (selectError) throw selectError
-    await refresh()
-    return current
+
+    if (!insertError && created) {
+      await refresh()
+      return created
+    }
+
+    if (insertError?.code === '23505') {
+      const { data: winner, error: selectError } = await supabase
+        .from('workouts')
+        .select('*')
+        .is('ended_at', null)
+        .single()
+      if (selectError) throw selectError
+      return winner
+    }
+
+    throw insertError
   }, [refresh])
+
+  const finishWorkout = useCallback(
+    async (id: string) => {
+      const { error } = await supabase.from('workouts').update({ ended_at: new Date().toISOString() }).eq('id', id)
+      if (error) throw error
+      await refresh()
+    },
+    [refresh],
+  )
 
   const updateWorkout = useCallback(
     async (id: string, patch: Partial<Pick<Workout, 'location' | 'notes' | 'start_time' | 'workout_date'>>) => {
@@ -80,7 +106,7 @@ export function useWorkouts() {
     [refresh],
   )
 
-  return { workouts, loading, refresh, getOrCreateTodayWorkout, updateWorkout, deleteWorkout }
+  return { workouts, loading, refresh, getOrCreateActiveWorkout, finishWorkout, updateWorkout, deleteWorkout }
 }
 
 export async function fetchWorkoutById(id: string): Promise<Workout | null> {
