@@ -6,20 +6,19 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
   return (
     <div className="min-h-screen bg-bg pb-24">
       <header className="flex items-center justify-between border-b border-border px-4 py-3">
-        <a
-          href="https://dqsis.com"
-          target="_blank"
-          rel="noopener"
-          className="flex items-center gap-2.5 no-underline"
-        >
-          <img src="/images/dqsis-logo.png" alt="DQSIS logo" className="h-7 w-7 object-contain" />
-          <span className="text-[0.8rem] font-semibold uppercase tracking-wide text-ink">
-            Stay Hard Log
-            <span className="block text-[0.68rem] font-normal normal-case tracking-wide text-mid">
-              dqsis.com
+        <div className="flex items-center gap-2.5">
+          <a href="https://dqsis.com" target="_blank" rel="noopener" className="no-underline">
+            <img src="/images/dqsis-logo.png" alt="DQSIS logo" className="h-7 w-7 object-contain" />
+          </a>
+          <a href="https://stayhard.dqsis.com/" className="no-underline">
+            <span className="text-[0.8rem] font-semibold uppercase tracking-wide text-ink">
+              Stay Hard Log
+              <span className="block text-[0.68rem] font-normal normal-case tracking-wide text-mid">
+                dqsis.com
+              </span>
             </span>
-          </span>
-        </a>
+          </a>
+        </div>
         <button onClick={() => supabase.auth.signOut()} className="text-[0.72rem] tracking-wide text-mid">
           Sign out
         </button>
