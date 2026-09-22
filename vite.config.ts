@@ -15,8 +15,8 @@ export default defineConfig({
         name: 'Stay Hard Log',
         short_name: 'Stay Hard',
         description: 'Personal gym workout logger',
-        theme_color: '#faf8f3',
-        background_color: '#faf8f3',
+        theme_color: '#FFFCF0',
+        background_color: '#FFFCF0',
         display: 'standalone',
         start_url: '/',
         icons: [

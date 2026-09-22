@@ -19,14 +19,19 @@ export function LoginScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg px-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="font-bold text-2xl text-ink">Stay Hard Log</h1>
+        <div className="mb-2 flex items-center gap-2.5">
+          <img src="/images/dqsis-logo.png" alt="DQSIS logo" className="h-9 w-9 object-contain" />
+          <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-ink">
+            Stay <span className="text-terracotta">Hard</span> Log
+          </h1>
+        </div>
         <input
           type="email"
           autoComplete="username"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded border border-border bg-white px-3 py-2 text-ink"
+          className="w-full rounded border border-border bg-bg px-3 py-2 text-ink"
           required
         />
         <input
@@ -35,7 +40,7 @@ export function LoginScreen() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded border border-border bg-white px-3 py-2 text-ink"
+          className="w-full rounded border border-border bg-bg px-3 py-2 text-ink"
           required
         />
         {error && <p className="text-sm text-terracotta">{error}</p>}

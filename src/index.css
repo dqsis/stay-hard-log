@@ -1,14 +1,26 @@
+/* Matches the dqsis.com design tokens (styles/style.css) so this app reads
+   as part of the same site family. Must precede @import "tailwindcss" — an
+   @import can only be preceded by @charset/@layer. */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #2b2a28;
-  --color-ink-2: #4a4740;
-  --color-olive: #6b7a52;
-  --color-terracotta: #b5563c;
-  --color-bg: #faf8f3;
-  --color-panel: #f1ede2;
-  --color-border: #e4ded2;
-  --color-mid: #8a8478;
+  --color-bg: #fffcf0;
+  --color-panel: #e6e4d9;
+  --color-border: #b7b5ac;
+
+  --color-ink: #100f0f;
+  --color-ink-2: #403e3c;
+  --color-mid: #878580;
+
+  --color-blue: #205ea6;
+  --color-cyan: #3aa99f;
+  --color-olive: #879a39;
+  --color-terracotta: #d0772b;
+  --color-pink: #ce5d97;
+
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 html,
@@ -20,7 +32,15 @@ body,
 body {
   background: var(--color-bg);
   color: var(--color-ink);
+  font-family: var(--font-mono);
   -webkit-tap-highlight-color: transparent;
+}
+
+/* dqsis.com uses a flat, sharp-cornered "TUI" look everywhere (--radius: 0px) —
+   override Tailwind's rounded-* utilities globally rather than stripping them
+   from every component. */
+* {
+  border-radius: 0 !important;
 }
 
 input[type='number']::-webkit-outer-spin-button,
@@ -30,4 +50,19 @@ input[type='number']::-webkit-inner-spin-button {
 }
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+/* Terminal-style prefixes, matching .eyebrow / .section-label / .site-footer
+   on dqsis.com. */
+.eyebrow::before {
+  content: '# ';
+  color: var(--color-pink);
+}
+.section-label::before {
+  content: '// ';
+  color: var(--color-pink);
+}
+.site-footer::before {
+  content: '$ ';
+  color: var(--color-pink);
 }

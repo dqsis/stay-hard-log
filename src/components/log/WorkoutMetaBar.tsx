@@ -16,7 +16,7 @@ export function WorkoutMetaBar({
     return (
       <button
         onClick={() => setExpanded(true)}
-        className="mb-4 flex w-full items-center justify-between rounded border border-border bg-white px-3 py-2 text-left"
+        className="mb-4 flex w-full items-center justify-between rounded border border-border bg-bg px-3 py-2 text-left"
       >
         <span className="text-sm text-ink">
           {workout.workout_date}
@@ -28,7 +28,7 @@ export function WorkoutMetaBar({
   }
 
   return (
-    <div className="mb-4 space-y-2 rounded border border-border bg-white p-3">
+    <div className="mb-4 space-y-2 rounded border border-border bg-bg p-3">
       <input
         value={location}
         onChange={(e) => setLocation(e.target.value)}

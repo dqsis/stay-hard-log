@@ -41,7 +41,7 @@ export function ExerciseBlock({
   }, [group.exerciseId, group.sets.length])
 
   return (
-    <div className="mb-4 rounded border border-border bg-white">
+    <div className="mb-4 rounded border border-border bg-bg">
       <div className="border-b border-border px-3 py-2 font-semibold text-ink">{group.exerciseName}</div>
       <div className="px-3">
         {group.sets.map((set) => (

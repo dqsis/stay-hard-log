@@ -13,7 +13,7 @@ export function ExerciseStatsChart({ points }: { points: StatPoint[] }) {
           <XAxis dataKey="date" tick={{ fontSize: 11 }} />
           <YAxis tick={{ fontSize: 11 }} unit="kg" width={48} />
           <Tooltip />
-          <Line type="monotone" dataKey="topWeightKg" name="Top set (kg)" stroke="#b5563c" strokeWidth={2} dot={{ r: 3 }} />
+          <Line type="monotone" dataKey="topWeightKg" name="Top set (kg)" stroke="#d0772b" strokeWidth={2} dot={{ r: 3 }} />
         </LineChart>
       </ResponsiveContainer>
     </div>

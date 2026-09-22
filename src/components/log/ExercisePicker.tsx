@@ -41,7 +41,7 @@ export function ExercisePicker({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search exercises…"
-          className="flex-1 rounded border border-border bg-white px-3 py-2 text-ink"
+          className="flex-1 rounded border border-border bg-bg px-3 py-2 text-ink"
         />
         <button onClick={onClose} className="px-2 text-mid">
           Cancel

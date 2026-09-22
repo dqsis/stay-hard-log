@@ -18,7 +18,7 @@ function Stepper({
       <button
         type="button"
         onClick={() => onChange(Math.max(min, round(value - step)))}
-        className="h-10 w-10 rounded-full border border-border bg-white text-lg text-ink"
+        className="h-10 w-10 rounded-full border border-border bg-bg text-lg text-ink"
       >
         −
       </button>
@@ -27,13 +27,13 @@ function Stepper({
         inputMode="decimal"
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-16 rounded border border-border bg-white py-2 text-center text-ink"
+        className="w-16 rounded border border-border bg-bg py-2 text-center text-ink"
       />
       <span className="w-6 text-xs text-mid">{suffix}</span>
       <button
         type="button"
         onClick={() => onChange(round(value + step))}
-        className="h-10 w-10 rounded-full border border-border bg-white text-lg text-ink"
+        className="h-10 w-10 rounded-full border border-border bg-bg text-lg text-ink"
       >
         +
       </button>

@@ -14,7 +14,7 @@ export function StatsScreen() {
       <select
         value={selectedId}
         onChange={(e) => setSelectedId(e.target.value)}
-        className="mb-4 w-full rounded border border-border bg-white px-3 py-2 text-ink"
+        className="mb-4 w-full rounded border border-border bg-bg px-3 py-2 text-ink"
       >
         <option value="">Pick an exercise…</option>
         {exercises.map((exercise) => (

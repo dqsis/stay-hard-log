@@ -5,7 +5,7 @@ export function WorkoutListItem({ workout, exerciseSummary }: { workout: Workout
   return (
     <Link
       to={`/history/${workout.id}`}
-      className="block rounded border border-border bg-white px-3 py-2.5"
+      className="block rounded border border-border bg-bg px-3 py-2.5"
     >
       <div className="flex items-center justify-between">
         <span className="font-medium text-ink">{workout.workout_date}</span>
