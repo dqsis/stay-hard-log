@@ -7,6 +7,7 @@ import { WorkoutListItem } from './WorkoutListItem'
 export function HistoryScreen() {
   const { workouts, loading } = useWorkouts()
   const [summaries, setSummaries] = useState<Map<string, string>>(new Map())
+  const [summariesLoading, setSummariesLoading] = useState(true)
 
   useEffect(() => {
     supabase
@@ -24,17 +25,25 @@ export function HistoryScreen() {
           byWorkout.set(row.workout_id, list)
         }
         setSummaries(new Map([...byWorkout.entries()].map(([id, names]) => [id, names.join(', ')])))
+        setSummariesLoading(false)
       })
   }, [])
 
+  // A workout with no sets yet is just the current open session waiting to be
+  // logged into (e.g. right after "Done" opens a fresh one) — not something
+  // worth showing as a history entry, so it's excluded once we know which
+  // workouts actually have exercises.
+  const loggedWorkouts = summariesLoading ? [] : workouts.filter((w) => summaries.has(w.id))
+  const stillLoading = loading || summariesLoading
+
   return (
     <AppShell title="History">
-      {loading && <p className="text-mid">Loading…</p>}
+      {stillLoading && <p className="text-mid">Loading…</p>}
       <div className="space-y-2">
-        {workouts.map((workout) => (
+        {loggedWorkouts.map((workout) => (
           <WorkoutListItem key={workout.id} workout={workout} exerciseSummary={summaries.get(workout.id) ?? ''} />
         ))}
-        {!loading && workouts.length === 0 && <p className="text-mid">No workouts logged yet.</p>}
+        {!stillLoading && loggedWorkouts.length === 0 && <p className="text-mid">No workouts logged yet.</p>}
       </div>
     </AppShell>
   )
