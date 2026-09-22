@@ -10,11 +10,12 @@ import { ExercisePicker } from './ExercisePicker'
 import { WorkoutMetaBar } from './WorkoutMetaBar'
 
 export function LogWorkoutScreen() {
-  const { getOrCreateActiveWorkout, finishWorkout, updateWorkout } = useWorkouts()
+  const { getOrCreateActiveWorkout, finishWorkout, updateWorkout, deleteWorkout } = useWorkouts()
   const { exercises, findOrCreateExercise } = useExercises()
   const [workout, setWorkout] = useState<Workout | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [finishing, setFinishing] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   // Exercises added to this session that don't have a logged set yet — kept
   // client-side only until "Add Set" actually writes the first one.
   const [pendingExercises, setPendingExercises] = useState<Exercise[]>([])
@@ -45,6 +46,20 @@ export function LogWorkoutScreen() {
       setWorkout(await getOrCreateActiveWorkout())
     } finally {
       setFinishing(false)
+    }
+  }
+
+  async function handleDelete() {
+    if (!workout) return
+    if (!confirm('Delete this entire workout and all its sets?')) return
+    setDeleting(true)
+    try {
+      await deleteWorkout(workout.id)
+      setPendingExercises([])
+      setWorkout(null)
+      setWorkout(await getOrCreateActiveWorkout())
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -88,6 +103,14 @@ export function LogWorkoutScreen() {
         className="mt-3 w-full rounded bg-ink px-4 py-3 font-semibold text-white disabled:opacity-50"
       >
         {finishing ? 'Finishing…' : 'Done — Start New Workout'}
+      </button>
+
+      <button
+        onClick={handleDelete}
+        disabled={deleting}
+        className="mt-6 w-full text-sm text-terracotta disabled:opacity-50"
+      >
+        Delete this workout
       </button>
 
       {pickerOpen && (
