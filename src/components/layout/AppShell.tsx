@@ -10,9 +10,9 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
           <a href="https://dqsis.com" target="_blank" rel="noopener" className="no-underline">
             <img src="/images/dqsis-logo.png" alt="DQSIS logo" className="h-7 w-7 object-contain" />
           </a>
-          <a href="https://stayhard.dqsis.com/" className="no-underline">
+          <a href="https://carrythelogs.dqsis.com/" className="no-underline">
             <span className="text-[0.8rem] font-semibold uppercase tracking-wide text-ink">
-              Stay Hard Log
+              Carry the Logs
               <span className="block text-[0.68rem] font-normal normal-case tracking-wide text-mid">
                 dqsis.com
               </span>
@@ -28,7 +28,7 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
         <p className="eyebrow mb-4 text-[0.75rem] font-medium tracking-wide text-mid">{title}</p>
         {children}
         <p className="site-footer mt-10 border-t border-border pt-4 text-center text-[0.7rem] font-medium text-mid">
-          Stay hard.
+          Carry the logs.
         </p>
       </main>
 

@@ -22,7 +22,7 @@ export function LoginScreen() {
         <div className="mb-2 flex items-center gap-2.5">
           <img src="/images/dqsis-logo.png" alt="DQSIS logo" className="h-9 w-9 object-contain" />
           <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-ink">
-            Stay <span className="text-terracotta">Hard</span> Log
+            Carry the <span className="text-terracotta">Logs</span>
           </h1>
         </div>
         <input
